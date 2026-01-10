@@ -14,13 +14,13 @@ from langchain_ollama import ChatOllama
 
 from langgraph.graph import StateGraph, END
 
-# Load environment variables (expecting TAVILY_API_KEY)
 load_dotenv()
 
 # --- CONFIGURATION ---
 llm = ChatOllama(
     model="llama3.1", 
-    temperature=0  # Deterministic for reasoning
+    temperature=0,  # Less stochastic to prevent hallucination
+    base_url="http://127.0.0.1:11434"
 )
 
 # Initialize Tavily Tool
@@ -30,7 +30,7 @@ tavily_tool = TavilySearchResults(max_results=5)
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
     query: str
-    context: List[str]      # Raw search results
+    context: List[str]      # Context for search results
     plan: List[str]         # Search queries
     draft: str              # Current draft response
     critique: str           # Feedback from Neutralizer or FactChecker
