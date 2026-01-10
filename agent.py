@@ -17,10 +17,13 @@ from langgraph.graph import StateGraph, END
 load_dotenv()
 
 # --- CONFIGURATION ---
+ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+print(f"Connecting to Ollama at: {ollama_base_url}")
+
 llm = ChatOllama(
     model="llama3.1", 
     temperature=0,  # Less stochastic to prevent hallucination
-    base_url="http://127.0.0.1:11434"
+    base_url=ollama_base_url
 )
 
 # Initialize Tavily Tool
