@@ -290,6 +290,39 @@ try:
 except Exception as e:
     print(f"Graph visualization failed: {e}")
 
+def query_agent(user_input: str) -> str:
+    """
+    Query the political intelligence agent with a user input.
+    
+    Args:
+        user_input: The user's query string
+        
+    Returns:
+        The agent's response as a string
+    """
+    messages = [HumanMessage(content=user_input)]
+    
+    result = rag_agent.invoke({
+        "messages": messages,
+        "query": user_input,
+        "context": [],
+        "plan": [],
+        "draft": "",
+        "critique": "",
+        "revision_count": 0,
+        "is_political": False,
+        "is_valid": True
+    })
+    
+    # Extract response
+    if result.get("draft"):
+        return result["draft"]
+    elif result.get("messages"):
+        # Handle redirect
+        return result["messages"][-1].content
+    else:
+        return "No response generated."
+
 def running_agent():
     print("\n=== POLITICAL INTELLIGENCE AGENT ===")
     print("Type 'exit' to quit.")
@@ -299,27 +332,10 @@ def running_agent():
             user_input = input("\nQuery: ")
             if user_input.lower() in ['exit', 'quit']:
                 break
-                
-            messages = [HumanMessage(content=user_input)]
             
-            result = rag_agent.invoke({
-                "messages": messages,
-                "query": user_input,
-                "context": [],
-                "plan": [],
-                "draft": "",
-                "critique": "",
-                "revision_count": 0,
-                "is_political": False,
-                "is_valid": True
-            })
-            
+            response = query_agent(user_input)
             print("\n=== FINAL RESPONSE ===")
-            if result.get("draft"):
-                print(result["draft"])
-            elif result.get("messages"):
-                # Handle redirect
-                print(result["messages"][-1].content)
+            print(response)
         except Exception as e:
             print(f"An error occurred: {e}")
 

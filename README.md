@@ -54,6 +54,26 @@ Before running the agent, ensure you have the following installed:
 
 ## Usage
 
+### Option 1: Web Interface (Recommended)
+
+1.  **Run the web interface**:
+    ```bash
+    python web_interface.py
+    ```
+
+2.  **Access the interface**:
+    -   The Gradio interface will automatically open in your browser at `http://127.0.0.1:7860`.
+    -   If it doesn't open automatically, navigate to that URL manually.
+
+3.  **Interact with the agent**:
+    -   Type your political query in the text box.
+    -   Click "Submit" or press Enter.
+    -   View the response in the chat interface.
+    -   Use "Clear Conversation" to start fresh.
+    -   Try the example queries provided.
+
+### Option 2: Command Line Interface
+
 1.  **Run the agent**:
     ```bash
     python agent.py

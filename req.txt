@@ -8,3 +8,4 @@ langchain-chroma
 chromadb
 pypdf
 tavily-python
+gradio
