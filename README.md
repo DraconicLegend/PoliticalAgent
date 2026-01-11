@@ -26,8 +26,8 @@ Before running the agent, ensure you have the following installed:
 
 1.  **Clone the repository** (or download the files):
     ```bash
-    git clone <repository-url>
-    cd <repository-directory>
+    git clone https://github.com/DraconicLegend/PoliticalAgent.git
+    cd PoliticalAgent
     ```
 
 2.  **Create a virtual environment** (recommended):
