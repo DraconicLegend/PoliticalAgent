@@ -1,4 +1,4 @@
-jimport gradio as gr
+import gradio as gr
 from agent import query_agent
 
 def chat_interface(message, history):

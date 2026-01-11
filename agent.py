@@ -280,15 +280,17 @@ graph.add_edge("redirect_node", END)
 rag_agent = graph.compile()
 
 
-# --- VISUALIZATION & RUN ---
+# --- VISUALIZATION ---
 
-try:
-    png_bytes = rag_agent.get_graph().draw_mermaid_png()
-    with open("agent_graph.png", "wb") as f:
-        f.write(png_bytes)
-    print("Graph saved to agent_graph.png")
-except Exception as e:
-    print(f"Graph visualization failed: {e}")
+def save_graph_visualization():
+    """Save the agent graph visualization to a PNG file."""
+    try:
+        png_bytes = rag_agent.get_graph().draw_mermaid_png()
+        with open("agent_graph.png", "wb") as f:
+            f.write(png_bytes)
+        print("Graph saved to agent_graph.png")
+    except Exception as e:
+        print(f"Graph visualization failed: {e}")
 
 def query_agent(user_input: str) -> str:
     """
@@ -340,4 +342,5 @@ def running_agent():
             print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
+    save_graph_visualization()
     running_agent()
