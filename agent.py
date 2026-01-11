@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage, ToolMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
+from langchain_core.callbacks import StreamingStdOutCallbackHandler
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_ollama import ChatOllama
 
@@ -153,7 +154,12 @@ def synthesis_node(state: AgentState) -> AgentState:
         "Constraint: Do not use 'Golden Mean' fallacies. Present the strongest version of each side’s argument fairly."
     )
     
-    response = llm.invoke([SystemMessage(content=system_prompt), HumanMessage(content=prompt_content)])
+    print("\n=== GENERATING RESPONSE ===")
+    response = llm.invoke(
+        [SystemMessage(content=system_prompt), HumanMessage(content=prompt_content)],
+        config={"callbacks": [StreamingStdOutCallbackHandler()]}
+    )
+    print()  # Add newline after streaming
     return {"draft": response.content, "revision_count": state.get("revision_count", 0) + 1}
 
 def neutralizer_node(state: AgentState) -> AgentState:
