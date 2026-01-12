@@ -15,6 +15,7 @@ from langchain_ollama import ChatOllama
 
 from langgraph.graph import StateGraph, END
 
+
 load_dotenv()
 
 # --- CONFIGURATION ---
@@ -50,7 +51,7 @@ def router_node(state: AgentState) -> AgentState:
     system_prompt = (
         "You are the Lead Dispatcher for a Political Intelligence Agent. Your task is to analyze the user's intent.\n"
         "Categorize: Is this a factual political query, a request for policy analysis, or non-political?\n"
-        "Boundary Check: If the request is non-political (e.g., weather, homework), flag it for the 'Redirect Node'.\n"
+        "Boundary Check: If the request is non-political, flag it for the 'Redirect Node'.\n"
         "Complexity: If political, identify the core 'tension' in the topic (e.g., 'Economic Impact vs. Social Equity').\n"
         "Constraint: Do not answer the question. Only output a JSON object containing keys: 'category', 'is_political' (boolean), and 'primary_entities'."
     )
@@ -86,15 +87,15 @@ def planner_node(state: AgentState) -> AgentState:
     )
     
     response = llm.invoke([SystemMessage(content=system_prompt), HumanMessage(content=query)])
-    
+    # FORMATTING INTO JSON
     try:
         content = response.content.replace('```json', '').replace('```', '').strip()
         plan = json.loads(content)
         if not isinstance(plan, list): 
-            # Fallback if LLM creates a dict or string
+            # if LLM creates a dict or string
             plan = [query]
     except:
-        plan = [query] # Fallback
+        plan = [query]
         
     print(f"Planner created {len(plan)} search queries.")
     return {"plan": plan}
@@ -136,7 +137,7 @@ def synthesis_node(state: AgentState) -> AgentState:
     Writer: Create initial draft using Perspective-Balance framework.
     """
     query = state['query']
-    context = "\n\n".join(state.get('context', []))
+    context = "\n\n".join(state.get('context', [])) # Stuff from the search
     critique = state.get('critique', "")
     
     prompt_content = (
@@ -251,7 +252,11 @@ graph.add_node("redirect_node", redirect_node)
 
 graph.set_entry_point("router_node")
 
-graph.add_conditional_edges("router_node", route_initial)
+graph.add_conditional_edges("router_node", route_initial,
+                            {
+        "planner_node": "planner_node",
+        "redirect_node": "redirect_node"
+    })
 graph.add_edge("planner_node", "researcher_node")
 graph.add_edge("researcher_node", "synthesis_node")
 graph.add_edge("synthesis_node", "neutralizer_node")
