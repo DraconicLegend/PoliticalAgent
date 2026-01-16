@@ -34,12 +34,10 @@ demo = gr.ChatInterface(
     and multi-perspective analysis. Ask questions about political events, policies, or debates.
     
     **Note**: This agent specializes in political topics. Non-political queries will be redirected.""",
-    examples=examples,
-    theme=gr.themes.Soft(),
-)
+    examples=examples)
 
 if __name__ == "__main__":
     print("\n🚀 Starting Political Intelligence Agent Web Interface...")
     print("📡 The interface will open in your browser automatically.")
     print("🛑 Press Ctrl+C to stop the server.\n")
-    demo.launch(share=False, server_name="127.0.0.1", server_port=7860)
+    demo.launch(share=True, server_name="127.0.0.1", server_port=7860)

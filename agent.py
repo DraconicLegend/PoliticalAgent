@@ -229,7 +229,7 @@ def route_neutrality(state: AgentState):
     return "fact_checker_node"
 
 def route_facts(state: AgentState):
-    if state.get('revision_count', 0) > 4: # Give it one more chance
+    if state.get('revision_count', 0) > 4: # Give it one more chance beyodn the max for prev node
         return END
         
     if not state.get('is_valid', True):
